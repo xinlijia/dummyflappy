@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<style>
+
+#container {
+    overflow:hidden;
+    width: 400px;
+    height: 400px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    background: Cyan;
+    margin: 0;
+}
+#pipe_up_prev {
+    border-bottom: 1px solid #777;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+
+    width: 40px;
+    height: 280px;
+    position: absolute;
+    left: 0px;
+    top: -120px;
+    background-color: GreenYellow;
+}
+
+#pipe_down_prev {
+    border-top: 1px solid #777;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    width: 40px;
+    height: 280px;
+    position: absolute;
+    left: 0px;
+    top: 240px;
+    background-color: GreenYellow;
+}
+
+#pipe_up_this {
+    border-bottom: 1px solid #777;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    width: 40px;
+    height: 280px;
+    position: absolute;
+    left: 180px;
+    top: -120px;
+    background-color: GreenYellow;
+}
+
+#pipe_down_this {
+    border-top: 1px solid #777;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    width: 40px;
+    height: 280px;
+    position: absolute;
+    left: 180px;
+    top: 240px;
+    background-color: GreenYellow;
+}
+#pipe_up_next {
+    border-bottom: 1px solid #777;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    width: 40px;
+    height: 280px;
+    position: absolute;
+    left: 360px;
+    top: -120px;
+    background-color: GreenYellow;
+}
+
+#pipe_down_next {
+    border-top: 1px solid #777;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    width: 40px;
+    height: 280px;
+    position: absolute;
+    left: 360px;
+    top: 240px;
+    background-color: GreenYellow;
+}
+
+
+
+/*#bird {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 100px;
+    top: 200px;
+    background-color: Blue;
+}*/
+
+
+#bird {
+    background-color: Blue;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    left: 100px;
+    top: 100px;
+    /*border-radius: 100%;*/
+
+}
+
+#button {
+    width: 200px;
+    height: 56px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    text-align: center;
+    font: italic bold 24px/60px Georgia, serif;
+}
+
+#score{
+    width: 200px;
+    height: 60px;
+    text-align: right;
+    position: absolute;
+    right: 20px;
+    top: 0px;
+    font: italic bold 24px/60px Georgia, serif;
+
+}
+
+
+</style>
+<body>
+
+
+
+    <div id="container">
+
+        <div id ="pipe_up_prev"></div>
+        <div id ="pipe_down_prev"></div>
+        <div id ="pipe_up_this"></div>
+        <div id ="pipe_down_this"></div>
+        <div id ="pipe_up_next"></div>
+        <div id ="pipe_down_next"></div>
+        <div id = "bird"></div>
+        <button onclick="game()", id="button">Start</button>
+        <div id="score">Score: 0</div>
+
+    </div>
+
+
+    <script>
+    document.onkeydown = checkKey;
+    var bird_pos = 200;
+    var pipe_this_pos = 180;
+    var pipe_prev_pos = 0;
+    var pipe_next_pos = 360;
+    var pipe_this_mid = 200;
+    var pipe_prev_mid = 200;
+    var pipe_next_mid = 200;
+
+    var score = 0;
+    var bird = document.getElementById("bird");
+    var pipe_up_prev = document.getElementById("pipe_up_prev");
+    var pipe_down_prev = document.getElementById("pipe_down_prev");
+    var pipe_up_this = document.getElementById("pipe_up_this");
+    var pipe_down_this = document.getElementById("pipe_down_this");
+    var pipe_up_next = document.getElementById("pipe_up_next");
+    var pipe_down_next = document.getElementById("pipe_down_next");
+    var score_ele = document.getElementById("score");
+    var button = document.getElementById("button");
+    var vy = 0.8;
+
+    var is_running = 0;
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38' && is_running) {
+            // 32 space
+            bird_pos -= 40;
+            bird.style.top = bird_pos + 'px';
+            vy = 0.8;
+        }
+    }
+
+
+    function game() {
+        if(is_running){
+            return;
+        }
+        else{
+            bird_pos = 100;
+            pipe_this_pos = 180;
+            pipe_prev_pos = 0;
+            pipe_next_pos = 360;
+            pipe_this_mid = 200;
+            pipe_prev_mid = 200;
+            pipe_next_mid = 200;
+            var id = setInterval(frame, 6);
+            button.innerHTML = "Running...";
+            bird.style.backgroundColor = "Blue";
+            vy = 0.8;
+            score = 0;
+            score_ele.innerHTML = "Score:" + score;
+            is_running = 1;
+
+        }
+
+        function frame() {
+            pipe_this_pos -= 1;
+            pipe_next_pos -= 1;
+            pipe_prev_pos -= 1;
+
+            if(pipe_this_pos < 100 + 20 && pipe_this_pos > 60){
+                if(bird_pos > pipe_this_mid + 40 - 20 +2 || bird_pos < pipe_this_mid - 40 -2){
+                    bird.style.backgroundColor = "red";
+                    clearInterval(id);
+                    is_running = 0;
+                    button.innerHTML = "Restart";
+                }
+            }
+
+
+            if(pipe_this_pos < 60){
+                score += 1
+                score_ele.innerHTML = "Score: " + score;
+                pipe_prev_pos = pipe_this_pos;
+                pipe_this_pos = pipe_next_pos;
+                pipe_next_pos = 420;
+                pipe_prev_mid = pipe_this_mid;
+                pipe_this_mid = pipe_next_mid;
+                // random generate next pipe
+                pipe_next_mid = Math.floor(Math.random()*100)+150;
+            }
+            if(is_running){
+                pipe_up_this.style.left = pipe_this_pos + 'px';
+                pipe_down_this.style.left = pipe_this_pos + 'px';
+                pipe_up_next.style.left = pipe_next_pos + 'px';
+                pipe_down_next.style.left = pipe_next_pos + 'px';
+                pipe_up_prev.style.left = pipe_prev_pos + 'px';
+                pipe_down_prev.style.left = pipe_prev_pos + 'px';
+
+                pipe_up_this.style.top = pipe_this_mid - 320 + 'px';
+                pipe_down_this.style.top = pipe_this_mid + 40 + 'px';
+                pipe_up_next.style.top = pipe_next_mid - 320 + 'px';
+                pipe_down_next.style.top = pipe_next_mid + 40 + 'px';
+                pipe_up_prev.style.top = pipe_prev_mid - 320 + 'px';
+                pipe_down_prev.style.top = pipe_prev_mid + 40 + 'px';
+
+                vy += 0.02;
+                if(vy > 1.1){
+                    vy = 1.1;
+                }
+                bird_pos += vy;
+                bird.style.top = bird_pos + 'px';
+            }
+        }
+    }
+    </script>
+
+</body>
+</html>
